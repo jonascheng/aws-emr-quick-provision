@@ -11,13 +11,14 @@ In addition to the script files, it supports storing metastore information on pe
 
 * Create EMR_DefaultRole / EMR_EC2_DefaultRole
 
-    Use the AWS CLI to create the default roles using the create-default-roles subcommand. For more information, see [Create and Use IAM Roles with the AWS CLI](http://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-iam-roles-creatingroles.html#emr-iam-roles-createdefaultwithcli).
+Use the AWS CLI to create the default roles using the create-default-roles subcommand. For more information, see [Create and Use IAM Roles with the AWS CLI](http://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-iam-roles-creatingroles.html#emr-iam-roles-createdefaultwithcli).
 
-    Type the following command to create default roles using the AWS CLI:
+Type the following command to create default roles using the AWS CLI:
 
 ```aws emr create-default-roles ```
 
-    The output of the command lists the contents of the default Amazon EMR role, *EMR_DefaultRole*; the the default EC2 instance profile, *EMR_EC2_DefaultRole*.
+
+The output of the command lists the contents of the default Amazon EMR role, *EMR_DefaultRole*; the the default EC2 instance profile, *EMR_EC2_DefaultRole*.
 
 > [When I try to create a new EMR cluster, I receive the error "EMR_DefaultRole is invalid." How can I resolve this?](https://aws.amazon.com/premiumsupport/knowledge-center/emr-default-role-invalid/)
 
