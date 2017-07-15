@@ -15,7 +15,7 @@ In addition to the script files, it supports storing metastore information on pe
 
     Type the following command to create default roles using the AWS CLI:
 
-        ```aws emr create-default-roles ```
+```aws emr create-default-roles ```
 
     The output of the command lists the contents of the default Amazon EMR role, *EMR_DefaultRole*; the the default EC2 instance profile, *EMR_EC2_DefaultRole*.
 
