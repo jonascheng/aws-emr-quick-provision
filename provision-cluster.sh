@@ -12,30 +12,8 @@
 # --scale-down-behavior TERMINATE_AT_INSTANCE_HOUR 
 # --region us-west-1
 
-################################################################
-# Please modify this session base on your AWS configurations
-################################################################
-# EC2 ssh key
-ec2_key_name="ec2-key-name"
-# subnet
-subnet_id="subnet-b422f5c2"
-# security group for master node
-emr_master_sg="sg-d9c50ebf"
-# security group for slave node(s)
-emr_slave_sg="sg-8ac40fec"
-# region
-emr_region="us-west-1"
-# hive configuration
-hive_configuration="hiveConfiguration.json"
-# instance type for both master and slave nodes
-instance_type="m3.xlarge"
-# counts of master node
-master_counts="1"
-# counts of slave node
-core_counts="2"
-# log to s3
-s3_log_url="s3://aws-logs-194674848290-us-west-1/elasticmapreduce"
-################################################################
+# import variables
+source ./vars.sh
 
 username=`echo $USER | tr -d ' '`
 clustername=`date '+%Y%m%d%H%M%S'`_$username
@@ -62,7 +40,7 @@ region=" --region $emr_region"
 # configuration
 configurations=" --configurations file://$hive_configuration"
 
-# query exist running cluster
+# query exist running cluster which contains $username
 ret=`aws emr list-clusters --cluster-states 'WAITING' $region --query Clusters[*].[Id,Name] --output text`
 cluster_id=`echo $ret | awk '{ if (match($2,"'$username'")) {print $1} }'`
 if [ $cluster_id ]; then
@@ -87,20 +65,17 @@ while [ $cluster_state == 0 ] && [ $retry -le $max_retry ];
 do
     # query emr cluster status
     ret=`aws emr describe-cluster --cluster-id $cluster_id $region --query Cluster.[Status.State,MasterPublicDnsName] --output text`
+    state=`echo $ret | cut -d' ' -f1`
 
-    for value in $ret
-    do
-        if [ $value != 0 ] && [ $value == 'WAITING' ]; then
-            cluster_state=1
-        else
-            emr_endpoint=$value
-            break
-        fi
-    done
+    if [ $state == 'WAITING' ]; then
+        cluster_state=1
+        emr_endpoint=`echo $ret | cut -d' ' -f2`
+        break
+    fi
 
     # sleep every 3 sec
     loop=$(( $waiting_time/3 ))
-    while [ $cluster_state == 0 ] && [ $loop -gt 0 ]
+    while [ $cluster_state == 0 ] && [ $loop -gt 0 ];
     do
         echo -n "."
         sleep 3

@@ -1,14 +1,10 @@
 #!/bin/bash
 
-################################################################
-# Please modify this session base on your AWS configurations
-################################################################
-# region
-emr_region="ap-northeast-1"
-################################################################
-
 # for awscli in ubuntu
 export PATH=${PATH}:/usr/local/bin
+
+# import variables
+source ./vars.sh
 
 # region
 region=" --region $emr_region"
